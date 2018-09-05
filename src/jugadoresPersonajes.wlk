@@ -3,17 +3,21 @@ object luisa {
 }
 
 object castillo{
-	var altura = 20 //metros
 	var defensa = 150
+
+	method altura(){ return 20 }
 	
-	method recibirAtaque(arma){
-		defensa -= arma.potencia()
+	method recibirAtaque(potencia){
+		defensa -= potencia
 	}
 	
 	method recibirTrabajo(){
-		if(defensa.min(200) ){
-			defensa +=self.estadoDeLaDefensa() / 5
-		}
+			defensa += (defensa + 20).min(200)
+	}
+	
+	method valorQueOtorga(){
+		return self.estadoDeLaDefensa() / 5
+		
 	}
 	
 	method estadoDeLaDefensa(){
@@ -23,7 +27,6 @@ object castillo{
 
 object ballesta{
 	
-	var cargada = true
 	var cargador = 10
 	var flecha = 4
 	
@@ -36,16 +39,16 @@ object ballesta{
 	
 	
 	method registrarUso(){
-		cargada = false
+		cargador -= 1
 	}
 	
 	method recargar(){
 		cargador -= 1
-		cargada = true
 	}
 	
 	method estaCargada(){
-		return cargada
+		return cargador >= 1
+		
 	}
 }
 
@@ -69,13 +72,17 @@ object jabalina{
 }
 
 object aurora {
-	var altura = 1
+//	var altura = 1
 	var live = true
 	
-	method recibirAtaque(arma){
-		if(arma.Potencia() > 10) live = false
+	method recibirAtaque(potencia){
+		if(potencia > 10) live = false
 	}
 
+	method valorQueOtorga(){ return 15 }
+	
+	method recibirTrabajo(){ }
+	
 }
 
 object tipa{
@@ -84,6 +91,10 @@ object tipa{
 	method verAltura(){
 		return altura
 	}
+	method valorQueOtorga(){ return altura * 2 }
+	
+	method recibirTrabajo(){ altura += 1  }
+	
 }
 
 object floki {
@@ -94,18 +105,21 @@ object floki {
 	        elemento.recibirAtaque(arma.potencia()) 
 	        arma.registrarUso()
 	    }
-	    }
+	}
 }
 
 
 object mario {
-	var valorRecolectado = 0
+	var valorRecolectado = 15
+	var ultimoEncontrado 
 	
 	method encontrar(elemento) {
 	    valorRecolectado += elemento.valorQueOtorga()
 	    elemento.recibirTrabajo()
-	    // ... acá hay que agregar una línea ...
+	   ultimoEncontrado = elemento
 	}
+	
+	method esFeliz(){ return valorRecolectado  >= 50 }
 	
 	method estadoDelValor(){
 		return valorRecolectado
